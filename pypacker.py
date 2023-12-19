@@ -512,7 +512,7 @@ class packbin():
             raise
 
         if self.pgdebug > 1:
-           print("decode output:", arr)
+           print("output:", arr)
 
         return arr
 
@@ -542,7 +542,7 @@ class packbin():
             print ("decode input", dstr)
         rrr = self._decode_data(dstr)
         if self.pgdebug > 1:
-           print("decode output:", rrr)
+           print("decoded output:", rrr)
 
         return rrr
 
