@@ -8,8 +8,8 @@ import struct, stat, base64, random, zlib
 from Crypto import Random
 from Crypto.Hash import SHA512
 
-import  pypacker_old
-#import  pypacker
+#import  pypacker_old
+import  pypacker
 
 # ------------------------------------------------------------------------
 # Test harness
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     rrr =  "mTQdnL51eKnblQflLGSMvnMKDG4XjhKa9Mbgm5ZY9YLd" \
             "/SxqZZxwyKc/ZVzCVwMxiJ5X8LdX3X5VVO5zq/VBWQ=="
 
-    pb = pypacker_old.packbin();
+    pb = pypacker.packbin();
     pb.verbose = 3
 
     #bindat = Random.new().read(64)
@@ -105,6 +105,8 @@ if __name__ == '__main__':
 
     if not org == ggg:
         print ("Broken decode")
+        sys.exit(1)
+
     else:
         print ("Success, compare OK")
 

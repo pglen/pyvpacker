@@ -46,6 +46,7 @@ if __name__ == '__main__':
 
     if  sorg_var != fff_var:
         print("Error on compare")
+        sys.exit(1)
     else:
         print("Compare OK")
 

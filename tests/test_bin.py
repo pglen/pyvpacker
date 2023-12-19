@@ -23,19 +23,16 @@ def setup_module(module):
 
 org2 = b""
 for aa in range(5, 15):
-    org2 += bytes(chr(aa), "utf-8")
+    org2 += str(aa).encode("utf-8")
 
-org = ["abcd", org2, 1234 ]
+org = ["abcd", org2, [1234, ] ]
 
 def test_packer(capsys):
 
     ddd = packer.encode_data("", org)
-    print(ddd)
-    captured = capsys.readouterr()
-
-    out = "pg s1 'a' a53 'pg s3 'sbi' s4 'abcd' b16 'BQYHCAkKCwwNDg==' i4 1234 ' \n"
-
-    assert captured.out == out
+    out =   "pg s1 'a' a74 'pg s3 'sba' s4 'abcd' b20 'NTY3ODkxMDExMTIxMzE0' " \
+            "a18 'pg s1 'i' i4 1234 ' ' "
+    assert ddd == out
 
 def test_enc_dec(capsys):
 

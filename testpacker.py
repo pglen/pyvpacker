@@ -45,6 +45,7 @@ if __name__ == '__main__':
         pass
     else:
         print("MISMATCH:", dddec)
+        sys.exit(1)
 
     #sys.exit(0)
 

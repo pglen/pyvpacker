@@ -43,6 +43,7 @@ __doc__ =   \
 
     Sat 18.Feb.2023 decode binary after done decomposing it
     Mon 18.Dec.2023 moved to pypacker dir
+    Tue 19.Dec.2023 test for python2 python 3 -- note: bytes / v2 v3 differences
 
 '''
 
@@ -119,6 +120,7 @@ class packbin():
         enco    = base64.b64encode(var)
         if sys.version_info[0] > 2:
             enco  = enco.decode("cp437")
+
         #print ("got bin", "'" + enco + "'")
         return "%c%d '%s' " %  (tt, len(enco), enco)
 

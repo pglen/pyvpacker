@@ -25,8 +25,7 @@ if __name__ == '__main__':
 
     org2 = b""
     for aa in range(5, 15):
-        if sys.version_info[0] > 2:
-            org2 += bytes(chr(aa), "utf-8")
+        org2 += str(aa).encode("utf-8")
 
     org  = [ org2, "hrllo", [b'123',], ("aa", "bb") ]
 
@@ -53,6 +52,7 @@ if __name__ == '__main__':
         pass
     else:
         print("MISMATCH:", dddec[0])
+        sys.exit(1)
 
     sys.exit(0)
 
@@ -109,8 +109,9 @@ if __name__ == '__main__':
     ggg = pb.decode_data(ddd3[5])
     #print("ggg", ggg)
 
-    if not org == ggg:
+    if not org == ggg :
         print ("Broken decode")
+        sys.exit(1)
     else:
         print ("Success, compare OK")
 

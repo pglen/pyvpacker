@@ -1,8 +1,8 @@
 #!/bin/bash
 
-python testpacker.py
-python testpacker2.py
-python testpacker3.py
-python testpacker4.py
-python testpacker5.py
+python testpacker.py || exit
+python testpacker2.py || exit
+python testpacker3.py  || exit
+python testpacker4.py  || exit
+python testpacker5.py  || exit
 
