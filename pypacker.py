@@ -39,6 +39,15 @@ __doc__ =   \
 
         newdata  = pb.encode_data("", arr_of_data)
 
+      The following comes into play when one encodes data with python 2 and
+    decodes in python 3.
+
+      Python V2 and V3 str / bytes differences. In python 2 the 'bytes' type is
+    an alias to the str type. It accomodates the whole palet of numbers in
+    py2; thus we detect binary by looking at the str and seeing if non printable
+    characters are present.   < ' ' or > 'del'. This works well, however we consider
+    this a workaround; so please be aware.
+
    History:
 
     Sat 18.Feb.2023 decode binary after done decomposing it
@@ -383,7 +392,7 @@ class packbin():
                 # see if binary
                 bbb = False
                 for bb in aa:
-                    if ord(bb) > 126 or ord(bb) < ' ':
+                    if ord(bb) > 126 or ord(bb) < ord(' '):
                         bbb = True
                 if bbb:
                     aaa += "b"
