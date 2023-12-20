@@ -21,7 +21,9 @@ def setup_module(module):
         #print(sys.exc_info())
         pass
 
-org2 = b""
+# Made it birary on purpose, so both V2 and V3 pass
+
+org2 = b"\x01"
 for aa in range(5, 15):
     org2 += str(aa).encode("utf-8")
 
@@ -30,7 +32,7 @@ org = ["abcd", org2, [1234, ] ]
 def test_packer(capsys):
 
     ddd = packer.encode_data("", org)
-    out =   "pg s1 'a' a74 'pg s3 'sba' s4 'abcd' b20 'NTY3ODkxMDExMTIxMzE0' " \
+    out =   "pg s1 'a' a78 'pg s3 'sba' s4 'abcd' b24 'ATU2Nzg5MTAxMTEyMTMxNA==' " \
             "a18 'pg s1 'i' i4 1234 ' ' "
     assert ddd == out
 

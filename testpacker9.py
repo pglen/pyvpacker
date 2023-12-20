@@ -23,7 +23,8 @@ if __name__ == '__main__':
     pb.verbose = 4
     pb.pgdebug = 0
 
-    org  = [b'12345',]
+    # Note: we made it binary by adding \0x1 at the end (hack-o-matic)
+    org  = ['12345', b'asdf\x01']
 
     # did not know this is not equal
     #org2 = ( org2, "hrllo", [b'123',], ("aa", "bb") )
