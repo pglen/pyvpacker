@@ -115,7 +115,8 @@ class packbin():
         #print("tt", tt, "var", var)
         #print("var", type(var))
         if type(var) == str:
-            var = bytes(var, 'utf-8')
+            #var = bytes(var, 'utf-8')
+            var = bytes(var)
 
         enco    = base64.b64encode(var)
         if sys.version_info[0] > 2:
@@ -382,7 +383,7 @@ class packbin():
                 # see if binary
                 bbb = False
                 for bb in aa:
-                    if ord(bb) > 128:
+                    if ord(bb) > 126 or ord(bb) < ' ':
                         bbb = True
                 if bbb:
                     aaa += "b"
