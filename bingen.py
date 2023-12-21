@@ -1,5 +1,7 @@
 import sys
 
+# testing binary string generation on V2 V3
+
 org2 = b""
 for aa in range(5, 15):
     org2 += str(aa).encode("utf-8")

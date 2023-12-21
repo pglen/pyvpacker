@@ -385,11 +385,13 @@ class packbin():
 
             elif type(aa).__name__ == "str":
                 #print(crysupp.hexdump(aa, len(aa)))
-                # see if binary
                 bbb = False
-                for bb in aa:
-                    if ord(bb) > 126 or ord(bb) < ord(' '):
-                        bbb = True
+                # see if binary, only on PY two
+                if sys.version_info[0] < 3:
+                    for bb in aa:
+                        if ord(bb) > 126 or ord(bb) < ord(' '):
+                            bbb = True
+                            break
                 if bbb:
                     aaa += "b"
                 else:
