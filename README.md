@@ -3,13 +3,6 @@
 
 ##    Encode / Decode arbitrary data into a string.
 
-    Preserves type and data. It is (mostly) 7/8 bit clean on
-    both python2 and python 3.
-
-    Note: python2 'bytes' type is a place holder - avoid encoding bytes on python 2
-    and decoding bytes on python 3; or at least be aware of the issues. This does
-    not effect the decoded data, but it does effect the cypher text.
-
     Op Codes (type codes):
 
     Int Number            i
@@ -36,6 +29,13 @@
     Empty format string will use the auto-detected types: (recommended)
 
         newdata  = pb.encode_data("", arr_of_data)
+
+        Preserves type and data. It is (mostly) 7/8 bit clean on
+    both python2 and python 3.
+
+    Note: python2 'bytes' type is a place holder - avoid encoding bytes on python 2
+    and decoding bytes on python 3; or at least be aware of the issues. This does
+    not effect the decoded data, but it does effect the cypher text.
 
       The following comes into play when one encodes data with python 2 and
     decodes it in python 3.
