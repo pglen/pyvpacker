@@ -5,9 +5,7 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-#from Crypto.Hash import SHA512
-#from Crypto import Random
-#from Crypto import StrongRandom
+#__all__ = [ packbin, ]
 
 __doc__ =   \
 '''

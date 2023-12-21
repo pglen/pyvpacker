@@ -5,10 +5,7 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-from Crypto import Random
-from Crypto.Hash import SHA512
-
-#import  pypacker_old
+sys.path.append( "..")
 import  pypacker
 
 # ------------------------------------------------------------------------
@@ -16,39 +13,34 @@ import  pypacker
 
 if __name__ == '__main__':
 
-    rrr =  "mTQdnL51eKnblQflLGSMvnMKDG4XjhKa9Mbgm5ZY9YLd" \
-            "/SxqZZxwyKc/ZVzCVwMxiJ5X8LdX3X5VVO5zq/VBWQ=="
-
     pb = pypacker.packbin();
-    pb.verbose = 3
+    pb.verbose = 0
+    pb.pgdebug = 0
 
-    #bindat = Random.new().read(64)
-    #print("bindat64:\n", base64.b64encode(bindat))
-
-    bindat = base64.b64decode(rrr)
-    print("bindat", bindat)
-    #sys.exit()
-
-    org = [ bindat ]
+    org  = [ "hello", [b'123', ["aa", "bb", (11,22) ] ], ]
 
     if pb.verbose > 2:
         print ("org:\n", org)
 
     eeenc = pb.encode_data("", *org)
     if pb.verbose > 2:
-        print("eeenc:\n", "{" + eeenc + "}")
+        print("eeenc:\n", eeenc )
+
+    #eeenc = eeenc[:16] + "x" + eeenc[17:]
+    #print("part", eeenc)
 
     dddec = pb.decode_data(eeenc)
     if pb.verbose > 2:
-        print("dddec:\n",  "{" + str(dddec) + "}")
+        print("dddec:\n",   str(dddec) )
 
     if org == dddec:
-        #print("Data matches OK.")
+        print("Compare OK.")
         pass
     else:
-        print("MISMATCH:")
+        print("MISMATCH:", dddec[0])
+        sys.exit(1)
 
-    #sys.exit(0)
+    sys.exit(0)
 
     #print ("Should print 3 successes")
     #iscsifb
@@ -103,11 +95,10 @@ if __name__ == '__main__':
     ggg = pb.decode_data(ddd3[5])
     #print("ggg", ggg)
 
-    if not org == ggg:
+    if not org == ggg :
         print ("Broken decode")
         sys.exit(1)
-
     else:
-        print ("Success, compare OK")
+        print ("Compare OK")
 
 # EOF

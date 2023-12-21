@@ -5,10 +5,12 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-from Crypto import Random
-from Crypto.Hash import SHA512
-
+sys.path.append( "..")
 import  pypacker
+
+# {pg s7 'iscsifd' i4 33 s3 'sub' c1 d s37
+# 'longer str here with ' and " all crap' i4 33 f8 33333333.200000
+# d101 'pg s1 'a' a84 'pg s2 'tt' t29 'pg s2 'si' s4 'test' i4 1111 ' t30 'pg s2 'si' s5 'test2' i4 1112 ' ' ' }
 
 # ------------------------------------------------------------------------
 # Test harness
@@ -16,10 +18,18 @@ import  pypacker
 if __name__ == '__main__':
 
     pb = pypacker.packbin();
-    pb.verbose = 3
+    pb.verbose = 0
     pb.pgdebug = 0
 
-    org  = [ b"12345678\7d" ]
+    org2 = b""
+    for aa in range(5, 15):
+        org2 += str(aa).encode("utf-8")
+
+    org  = [ org2, "hrllo", [b'123',], ("aa", "bb") ]
+
+    # did not know this is not equal
+    #org2 = ( org2, "hrllo", [b'123',], ("aa", "bb") )
+    #print("cmp:", org == org2)
 
     if pb.verbose > 2:
         print ("org:\n", org)
@@ -36,7 +46,7 @@ if __name__ == '__main__':
         print("dddec:\n",   str(dddec) )
 
     if org == dddec:
-        print("Data matches OK.")
+        print("Compare OK.")
         pass
     else:
         print("MISMATCH:", dddec[0])
@@ -101,6 +111,6 @@ if __name__ == '__main__':
         print ("Broken decode")
         sys.exit(1)
     else:
-        print ("Success, compare OK")
+        print ("Compare OK")
 
 # EOF

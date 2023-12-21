@@ -5,11 +5,8 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-from Crypto import Random
-from Crypto.Hash import SHA512
-
+sys.path.append( "..")
 import pypacker
-
 
 # ------------------------------------------------------------------------
 # Test harness
@@ -21,7 +18,7 @@ if __name__ == '__main__':
     zorg = { "key1" : "111", 'key2' : 222, "arr": xorg }
 
     pb = pypacker.packbin();
-    pb.verbose = 5
+    pb.verbose = 0
 
     #print("doc", pypacker.__doc__)
     #print("dict", dir(pypacker))

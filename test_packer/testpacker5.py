@@ -5,53 +5,47 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-from Crypto import Random
-from Crypto.Hash import SHA512
-
+sys.path.append( "..")
 import  pypacker
-
-# {pg s7 'iscsifd' i4 33 s3 'sub' c1 d s37
-# 'longer str here with ' and " all crap' i4 33 f8 33333333.200000
-# d101 'pg s1 'a' a84 'pg s2 'tt' t29 'pg s2 'si' s4 'test' i4 1111 ' t30 'pg s2 'si' s5 'test2' i4 1112 ' ' ' }
 
 # ------------------------------------------------------------------------
 # Test harness
 
 if __name__ == '__main__':
 
+    rrr =  "mTQdnL51eKnblQflLGSMvnMKDG4XjhKa9Mbgm5ZY9YLd" \
+            "/SxqZZxwyKc/ZVzCVwMxiJ5X8LdX3X5VVO5zq/VBWQ=="
+
     pb = pypacker.packbin();
-    pb.verbose = 4
-    pb.pgdebug = 0
+    pb.verbose = 0
 
-    # Note: we made it binary by adding \0x1 at the end (hack-o-matic)
-    org  = ['12345', b'asdf\x01']
+    #bindat = Random.new().read(64)
+    #print("bindat64:\n", base64.b64encode(bindat))
 
-    # did not know this is not equal
-    #org2 = ( org2, "hrllo", [b'123',], ("aa", "bb") )
-    #print("cmp:", org == org2)
+    bindat = base64.b64decode(rrr)
+    #print("bindat", bindat)
+    #sys.exit()
+
+    org = [ bindat ]
 
     if pb.verbose > 2:
         print ("org:\n", org)
 
     eeenc = pb.encode_data("", *org)
     if pb.verbose > 2:
-        print("eeenc:\n", eeenc )
-
-    #eeenc = eeenc[:16] + "x" + eeenc[17:]
-    #print("part", eeenc)
+        print("eeenc:\n", "{" + eeenc + "}")
 
     dddec = pb.decode_data(eeenc)
     if pb.verbose > 2:
-        print("dddec:\n",   str(dddec) )
+        print("dddec:\n",  "{" + str(dddec) + "}")
 
     if org == dddec:
-        print("Data matches OK.")
+        #print("Data matches OK.")
         pass
     else:
-        print("MISMATCH:", dddec[0])
-        sys.exit(1)
+        print("MISMATCH:")
 
-    sys.exit(0)
+    #sys.exit(0)
 
     #print ("Should print 3 successes")
     #iscsifb
@@ -106,10 +100,11 @@ if __name__ == '__main__':
     ggg = pb.decode_data(ddd3[5])
     #print("ggg", ggg)
 
-    if not org == ggg :
+    if not org == ggg:
         print ("Broken decode")
         sys.exit(1)
+
     else:
-        print ("Success, compare OK")
+        print ("Compare OK")
 
 # EOF

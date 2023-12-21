@@ -5,11 +5,8 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-from Crypto import Random
-from Crypto.Hash import SHA512
-
-import  pypacker
-
+sys.path.append( "..")
+import pypacker
 
 # {pg s7 'iscsifd' i4 33 s3 'sub' c1 d s37
 # 'longer str here with ' and " all crap' i4 33 f8 33333333.200000 d101 'pg s1 'a' a84 'pg s2 'tt' t29 'pg s2 'si' s4 'test' i4 1111 ' t30 'pg s2 'si' s5 'test2' i4 1112 ' ' ' }
@@ -20,7 +17,7 @@ import  pypacker
 if __name__ == '__main__':
 
     pb = pypacker.packbin();
-    pb.verbose = 3
+    pb.verbose = 0
 
     org = [ 33, "sub", 'd', "longer str here with \' and \" all crap",  33, 33333333.2,
                 {"test": 1111, "test2": 1112, } ]
@@ -41,7 +38,7 @@ if __name__ == '__main__':
         print("dddec:\n",  "{" + str(dddec) + "}")
 
     if org == dddec:
-        print("Data matches OK.")
+        #print("Data matches OK.")
         pass
     else:
         print("MISMATCH:", dddec)
@@ -104,7 +101,8 @@ if __name__ == '__main__':
 
     if not org == ggg:
         print ("Broken decode")
+        sys.exit(1)
     else:
-        print ("Success, compare OK")
+        print ("Compare OK")
 
 # EOF
