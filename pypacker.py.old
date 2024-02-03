@@ -5,73 +5,66 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-#__all__ = [ packbin, ]
+#from Crypto.Hash import SHA512
+#from Crypto import Random
+#from Crypto import StrongRandom
+
+import support
 
 __doc__ =   \
 '''
-    Encode / Decode arbitrary data in a string. Preserves type and data.
-    It is 8 bit clean on both python[2|3]
+Encode / Decode arbitrary data in a string. Preserves type and data.
+It is 8 bit clean on both python[2|3]
 
-    Op Codes (type codes):
+Op Codes (type codes):
 
-    Int Number            i
-    Float Number          f
-    Character             c
-    String                s
-    Binary                b
+Int Number            i
+Float Number          f
+Character             c
+String                s
+Binary                b
 
-    List                  a         (array) gets encoded as extended
-    Tuple                 t         gets encoded as extended (x)
-    Dict                  d         gets encoded as extended (x)
+List                  a         (array) gets encoded as extended
+Tuple                 t         gets encoded as extended (x)
+Dict                  d         gets encoded as extended (x)
 
-    Extended              x         encoded as new packer string (recursive)
+Extended              x         encoded as new packer string (recursive)
 
-    Usage:
+Usage:
 
-        pb  = packbin()
-        newdata  = pb.encode_data(formatstr, arr_of_data)
-        decdata  = pb.decode_data(newdata)
-        ?assert?(decdata == arr_of_data)
+    pb  = packbin()
+    newdata  = pb.encode_data(formatstr, arr_of_data)
+    decdata  = pb.decode_data(newdata)
+    ?assert?(decdata == arr_of_data)
 
-    Empty format string will use auto detected types
+Empty format string will use auto detected types
 
-        newdata  = pb.encode_data("", arr_of_data)
-
-      The following comes into play when one encodes data with python 2 and
-    decodes in python 3.
-
-      Python V2 and V3 str / bytes differences. In python 2 the 'bytes' type is
-    an alias to the str type. It accomodates the whole palet of numbers in
-    py2; thus we detect binary by looking at the str and seeing if non printable
-    characters are present.   < ' ' or > 'del'. This works well, however we consider
-    this a workaround; so please be aware.
-
-   History:
-
-    Sat 18.Feb.2023 decode binary after done decomposing it
-    Mon 18.Dec.2023 moved to pypacker dir
-    Tue 19.Dec.2023 test for python2 python 3 -- note: bytes / v2 v3 differences
+    newdata  = pb.encode_data("", arr_of_data)
 
 '''
 
-version = "1.0"
+# Exports
+
+__all__ = [ "packbin"]
+
+#"packbin.autotype","packbin.encode_data", "packbin.decode_data",
+#                "wrap_data", "unwrap_data", "verbose"]
+
+pgdebug = 0
+
+class InvalidType(Exception):
+
+    def _init_(self, message):
+         self.message = message
+
+    def _str_(self):
+        return(self.message)
 
 # ------------------------------------------------------------------------
 
 class packbin():
 
-    class InvalidType(Exception):
-
-        def _init_(self, message):
-             self.message = message
-
-        def _str_(self):
-            return(self.message)
-
     def __init__(self):
-
-        self.pgdebug = 0
-        self.dec_binary = True
 
         # -----------------------------------------------------------------------
         # This array of functions will call the appropriate function
@@ -117,15 +110,14 @@ class packbin():
 
     def _got_bin(self, tt, var):
 
-        #print("tt", tt, "var", var)
-        #print("var", type(var))
-        if type(var) == str:
-            #var = bytes(var, 'utf-8')
-            var = bytes(var)
+        #enco = base64.b64encode(var)
+        #if sys.version_info[0] > 2:
+        #    enco  = enco.decode("cp437")
 
-        enco    = base64.b64encode(var)
-        if sys.version_info[0] > 2:
-            enco  = enco.decode("cp437")
+        if type(var) == type(b""):
+            enco = var.decode("cp437")
+        else:
+            enco = var
 
         #print ("got bin", "'" + enco + "'")
         return "%c%d '%s' " %  (tt, len(enco), enco)
@@ -152,25 +144,6 @@ class packbin():
             ccc.append((aa, var[aa]))
         sss = self.encode_data("", ccc)
         return "%c%d '%s' " %  (tt, len(sss), sss)
-
-    def _reclen(self, xstr):
-
-        idxx = 0
-        #print ("found:", xstr[:32], end=' ')
-        idxx = 1
-        nnn = xstr[idxx:].find(" ")
-        if nnn < 0:
-            print("bad xencoding at ", xstr[:idxx+12])
-
-        slen = int(xstr[idxx:idxx+nnn])
-        #print("slen", slen)
-
-        #if slen >= len(xstr):
-        #    print("err bad xencoding at ", xstr[:idxx+12])
-
-        idxx += nnn + 2
-        #print(slen)
-        return slen
 
     # ------------------------------------------------------------------------
     # Return var and consumed number of characters
@@ -315,14 +288,12 @@ class packbin():
         idxx += nnn + 2
         sval = str(xstr[idxx:idxx+slen])
         #print("bin:",  sval )
-        deco   = base64.b64decode(sval)
+        #deco   = base64.b64decode(sval)
 
-        #if self.dec_binary:
-        #    deco2 = deco.decode('utf-8')
+        #if type(sval) == type(""):
+        #    deco = bytes(sval, "cp437")
         #else:
-        #    deco2 = deco
-
-        #print("deco", type(deco), deco) #, type(deco2), deco2)
+        deco = str(sval)
 
         idxx += slen + 2
         #print("idxx:", idxx, "var:", "{" + sval + "}", "next:", "'" + xstr[idxx:idxx+6] + "'")
@@ -372,21 +343,13 @@ class packbin():
         for cc in self.typeact:
             if cc[0] == nstr:
                 #print ("found", cc[0], cc[1], formstr[idx])
-                # optizer: we pass expected length to slice. note the 16
-                # is we added length for the expected format characters
                 if cc[2]:
-                    rlen = self._reclen(dstr[idx2:idx2+16])
-                    #print (rlen, dstr[idx2:idx2+64])
-                    idx3, val = cc[2](dstr[idx2:idx2+rlen+16])
+                    idx3, val = cc[2](dstr[idx2:])
                 found = True
         if not found:
-            # xxx We do not raise an exception, rather inform the user
+            # We do not raise an exception, rather inform the use
             #print("Warn: Invalid char in '%c' (at %d) format string in '%s" % (nstr, idx2, dstr))
-            if self.verbose:
-                print("Warn: Invalid char in '%c'" % nstr)
-            # We raise an exception (by pop demand)
-            raise self.InvalidType("Invalid type descriptor",  nstr, "at offset: %d" % idx2)
-
+            print("Warn: Invalid char in '%c'" % nstr)
         return idx3, val
 
     # Estabilish a proper format string autmatically
@@ -394,10 +357,7 @@ class packbin():
 
         aaa = ""
         for aa in xdata:
-
-            if self.pgdebug > 5:
-                print("typename:", type(aa).__name__)
-
+            #print("typename:", type(aa).__name__)
             if type(aa).__name__ == "int":
                 #print (aa)
                 aaa += "i"
@@ -408,13 +368,11 @@ class packbin():
 
             elif type(aa).__name__ == "str":
                 #print(crysupp.hexdump(aa, len(aa)))
+                # see if binary
                 bbb = False
-                # see if binary, only on PY two
-                if sys.version_info[0] < 3:
-                    for bb in aa:
-                        if ord(bb) > 126 or ord(bb) < ord(' '):
-                            bbb = True
-                            break
+                for bb in aa:
+                    if ord(bb) > 128:
+                        bbb = True
                 if bbb:
                     aaa += "b"
                 else:
@@ -444,10 +402,9 @@ class packbin():
                 aaa += "d"
 
             else:
-                raise self.InvalidType( "Unsupported type: "  + str(type(aa).__name__ ))
+                raise InvalidType( "Unsupported type: "  + str(type(aa).__name__ ))
 
-        if self.pgdebug > 3:
-            print("autotype res", aaa)
+        #print("autotype res", aaa)
 
         return aaa
 
@@ -456,8 +413,6 @@ class packbin():
     def _encode_data(self, front, *formstr):
 
         #print("front", front, "formstr", formstr)
-
-        #ttt = time.time()
 
         localf = formstr[0]
         if  localf == "":
@@ -498,19 +453,13 @@ class packbin():
         if idx < len(formstr):
             raise ValueError("More data than chars in format string")
 
-        #print ("ttt=%.2f ns" % (1000000 *(time.time() - ttt)))
-        #ttt = time.time()
         packed_str = "".join(packed_arr)
-        #print ("ttt2=%.2f ns" % (1000000 *(time.time() - ttt)))
         return packed_str
 
 
     def _decode_data(self, dstr):
 
         #print ("---org:\n", dstr, "org---")
-
-        if type(dstr) != str:
-            dstr = dstr.decode('utf-8')
 
         if dstr[0:3] != 'pg ':
             raise ValueError("Cannot decode, must begin with pg sequence.")
@@ -520,7 +469,7 @@ class packbin():
         idx = 3
         if dstr[idx] != 's':
             raise ValueError("pypacker decode: Error, must have format string at the beginning.")
-            #return ""
+            return ""
         idx += 1
 
         nnn = dstr[idx:].find(" ")
@@ -546,19 +495,16 @@ class packbin():
             while True:
                 if idx >= len(dstr):
                     break
-                #ttt = time.time()
                 idx2, val = self._eval_one(dstr, idx)
-                #print("idx:", idx, "val:", dstr[idx:idx+24], "idx2", idx2)
-                #print ("ttt=%.2f ns" % (1000000 *(time.time() - ttt)))
-
+                #print("idx:", idx, "val:", val)
                 idx += idx2
                 arr.append(val)
         except:
             #print("Exception at:", idx, "val:", val)
             raise
 
-        if self.pgdebug > 1:
-           print("output:", arr)
+        if pgdebug > 1:
+           print("decode output:", arr)
 
         return arr
 
@@ -567,28 +513,31 @@ class packbin():
     # Pass format string as the first element. Empty string switches on
     # autotype
 
+    #@support.timeit
     def encode_data(self, *formstr):
 
-        #print("type", type(formstr[1]), len(formstr[1]))
-        #if type(formstr[1]).__name__ == "NoneType":
+        print("type", type(formstr[0]))
+
+        #if type(formstr).__name__ != "NoneType":
         #    raise ValueError("Cannot encode, must be an iterable")
 
-        if self.pgdebug:
+        if pgdebug:
            print("encode input:", *formstr)
         rrr = self._encode_data("pg ", *formstr)
-        if self.pgdebug > 1:
+        if pgdebug > 1:
            print("encode output:", rrr)
 
         return rrr
 
+    #@support.timeit
     def decode_data(self, dstr):
 
         #print ("---org:\n", dstr, "org---")
-        if self.pgdebug:
+        if pgdebug:
             print ("decode input", dstr)
         rrr = self._decode_data(dstr)
-        if self.pgdebug > 1:
-           print("decoded output:", rrr)
+        if pgdebug > 1:
+           print("decode output:", rrr)
 
         return rrr
 
