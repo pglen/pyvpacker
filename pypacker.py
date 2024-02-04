@@ -14,17 +14,17 @@ __doc__ =   \
 
     Op Codes (type codes):
 
-    Int Number            i
-    Float Number          f
-    Character             c
-    String                s
-    Binary                b
+        Int Number            i
+        Float Number          f
+        Character             c
+        String                s
+        Binary                b
 
-    List                  a         (array) gets encoded as extended
-    Tuple                 t         gets encoded as extended (x)
-    Dict                  d         gets encoded as extended (x)
+        List                  a     (array) gets encoded as extended
+        Tuple                 t     gets encoded as extended (x)
+        Dict                  d     gets encoded as extended (x)
 
-    Extended              x         encoded as new packer string (recursive)
+        Extended              x     encoded as new packer string (recursive)
 
     Usage:
 
@@ -44,13 +44,16 @@ __doc__ =   \
     an alias to the str type. It accomodates the whole palet of numbers in
     py2; thus we detect binary by looking at the str and seeing if non printable
     characters are present.   < ' ' or > 'del'. This works well, however we consider
-    this a workaround; so please be aware.
+    this a workaround; so please be aware. If unsure, use the same py versin on
+    both encode / decode. If that is difficult to assure, use py 3.x on both.
 
    History:
 
     Sat 18.Feb.2023 decode binary after done decomposing it
     Mon 18.Dec.2023 moved to pypacker dir
     Tue 19.Dec.2023 test for python2 python 3 -- note: bytes / v2 v3 differences
+    Sun 04.Feb.2024 optimized. str += replaced with join
+    Sun 04.Feb.2024 optimized ... scan is done on partial / look ahead basis
 
 '''
 
