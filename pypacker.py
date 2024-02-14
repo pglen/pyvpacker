@@ -128,7 +128,7 @@ class packbin():
 
         enco    = base64.b64encode(var)
         if sys.version_info[0] > 2:
-            enco  = enco.decode("cp437")
+            enco  = enco.decode("utf-8")
 
         #print ("got bin", "'" + enco + "'")
         return "%c%d '%s' " %  (tt, len(enco), enco)
@@ -388,7 +388,7 @@ class packbin():
             if self.verbose:
                 print("Warn: Invalid char in '%c'" % nstr)
             # We raise an exception (by pop demand)
-            raise self.InvalidType("Invalid type descriptor",  nstr, "at offset: %d" % idx2)
+            #raise self.InvalidType("Invalid type descriptor",  nstr, "at offset: %d" % idx2)
 
         return idx3, val
 
