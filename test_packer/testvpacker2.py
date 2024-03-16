@@ -5,7 +5,7 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-import pypacker
+import pyvpacker
 
 xorg = ["val1", "val2"]
 yorg = ("str1", "2", "3")
@@ -16,11 +16,11 @@ zorg = { "key1" : "111", 'key2' : 222, "arr": xorg }
 
 if __name__ == '__main__':
 
-    pb = pypacker.packbin();
+    pb = pyvpacker.packbin();
     pb.verbose = 5
 
-    #print("doc", pypacker.__doc__)
-    #print("dict", dir(pypacker))
+    #print("doc", pyvpacker.__doc__)
+    #print("dict", dir(pyvpacker))
 
     #sorg_var = [xorg , xorg]
     #sorg_var = [ zorg, yorg ]

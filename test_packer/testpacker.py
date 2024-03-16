@@ -6,7 +6,7 @@ import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
 sys.path.append( "..")
-import pypacker
+import pyvpacker
 
 # {pg s7 'iscsifd' i4 33 s3 'sub' c1 d s37
 # 'longer str here with ' and " all crap' i4 33 f8 33333333.200000 d101 'pg s1 'a' a84 'pg s2 'tt' t29 'pg s2 'si' s4 'test' i4 1111 ' t30 'pg s2 'si' s5 'test2' i4 1112 ' ' ' }
@@ -16,7 +16,7 @@ import pypacker
 
 if __name__ == '__main__':
 
-    pb = pypacker.packbin();
+    pb = pyvpacker.packbin();
     pb.verbose = 0
 
     org = [ 33, "sub", 'd', "longer str here with \' and \" all crap",  33, 33333333.2,

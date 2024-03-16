@@ -10,11 +10,11 @@ gettext.textdomain('thisapp')
 _ = gettext.gettext
 
 #base = os.path.dirname(os.path.realpath(__file__))
-#sys.path.append(os.path.join(base,  '../pypacker'))
+#sys.path.append(os.path.join(base,  '../pyvpacker'))
 
-import twincore, pypacker
+import twincore, pyvpacker
 
-packer = pypacker.packbin()
+packer = pyvpacker.packbin()
 core = twincore.TwinCore("second.pydb")
 
 # Read in file with foreign characters

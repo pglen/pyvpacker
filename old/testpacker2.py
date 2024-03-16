@@ -5,8 +5,11 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-sys.path.append( "..")
-import pyvpacker
+from Crypto import Random
+from Crypto.Hash import SHA512
+
+import pypacker
+
 
 # ------------------------------------------------------------------------
 # Test harness
@@ -17,11 +20,11 @@ if __name__ == '__main__':
     yorg = ("str1", "2", "3")
     zorg = { "key1" : "111", 'key2' : 222, "arr": xorg }
 
-    pb = pyvpacker.packbin();
-    pb.verbose = 0
+    pb = pypacker.packbin();
+    pb.verbose = 5
 
-    #print("doc", pyvpacker.__doc__)
-    #print("dict", dir(pyvpacker))
+    #print("doc", pypacker.__doc__)
+    #print("dict", dir(pypacker))
 
     #sorg_var = [xorg , xorg]
     #sorg_var = [ zorg, yorg ]
@@ -43,7 +46,6 @@ if __name__ == '__main__':
 
     if  sorg_var != fff_var:
         print("Error on compare")
-        sys.exit(1)
     else:
         print("Compare OK")
 

@@ -5,7 +5,7 @@ from __future__ import print_function
 import sys
 
 sys.path.append( "..")
-import   pypacker
+import   pyvpacker
 
 org = [ "1234", "222"]
 
@@ -14,7 +14,7 @@ org = [ "1234", "222"]
 
 if __name__ == '__main__':
 
-    pb = pypacker.packbin()
+    pb = pyvpacker.packbin()
 
     ddd = pb.encode_data("", org)
     ggg = pb.decode_data(ddd)

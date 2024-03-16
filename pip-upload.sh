@@ -1,1 +1,1 @@
-twine upload --config-file ~/.pypirc --repository pydbase dist/* --verbose
+twine upload --config-file ~/.pypirc --repository pyvpacker dist/* --verbose

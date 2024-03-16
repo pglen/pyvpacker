@@ -9,8 +9,6 @@ import struct, stat, base64, random, zlib
 #from Crypto import Random
 #from Crypto import StrongRandom
 
-import support
-
 __doc__ =   \
 '''
 Encode / Decode arbitrary data in a string. Preserves type and data.
@@ -45,12 +43,10 @@ Empty format string will use auto detected types
 
 # Exports
 
-__all__ = [ "packbin"]
-
-#"packbin.autotype","packbin.encode_data", "packbin.decode_data",
-#                "wrap_data", "unwrap_data", "verbose"]
-
 pgdebug = 0
+
+__all__ = ("autotype", "packbin.encode_data", "decode_data",
+                "wrap_data", "unwrap_data", "verbose")
 
 class InvalidType(Exception):
 
@@ -109,16 +105,9 @@ class packbin():
         return "%c%d '%s' " %  (tt, len(var), var)
 
     def _got_bin(self, tt, var):
-
-        #enco = base64.b64encode(var)
-        #if sys.version_info[0] > 2:
-        #    enco  = enco.decode("cp437")
-
-        if type(var) == type(b""):
-            enco = var.decode("cp437")
-        else:
-            enco = var
-
+        enco    = base64.b64encode(var)
+        if sys.version_info[0] > 2:
+            enco  = enco.decode("cp437")
         #print ("got bin", "'" + enco + "'")
         return "%c%d '%s' " %  (tt, len(enco), enco)
 
@@ -288,13 +277,7 @@ class packbin():
         idxx += nnn + 2
         sval = str(xstr[idxx:idxx+slen])
         #print("bin:",  sval )
-        #deco   = base64.b64decode(sval)
-
-        #if type(sval) == type(""):
-        #    deco = bytes(sval, "cp437")
-        #else:
-        deco = str(sval)
-
+        deco   = base64.b64decode(sval)
         idxx += slen + 2
         #print("idxx:", idxx, "var:", "{" + sval + "}", "next:", "'" + xstr[idxx:idxx+6] + "'")
         return idxx, deco
@@ -425,13 +408,10 @@ class packbin():
                 for aa in formstr:
                     print("got format:", aa)
 
-        packed_arr = []
-        #packed_str = front
-        packed_arr.append(front)
+        packed_str = front
 
         # Add the form string itself
-        #packed_str += self._got_str("s", localf)
-        packed_arr.append(self._got_str("s", localf))
+        packed_str += self._got_str("s", localf)
 
         idx = 1;
         for bb in localf:
@@ -443,8 +423,7 @@ class packbin():
                     if self.verbose > 5:
                         print ("found", cc[0], cc[1], formstr[idx])
                     if cc[1]:
-                        #packed_str += cc[1](bb, formstr[idx])
-                        packed_arr.append (cc[1](bb, formstr[idx]))
+                        packed_str += cc[1](bb, formstr[idx])
                     idx += 1
                     found = True
             if not found:
@@ -453,7 +432,6 @@ class packbin():
         if idx < len(formstr):
             raise ValueError("More data than chars in format string")
 
-        packed_str = "".join(packed_arr)
         return packed_str
 
 
@@ -513,12 +491,10 @@ class packbin():
     # Pass format string as the first element. Empty string switches on
     # autotype
 
-    #@support.timeit
     def encode_data(self, *formstr):
 
-        print("type", type(formstr[0]))
-
-        #if type(formstr).__name__ != "NoneType":
+        #print("type", type(formstr[1]), len(formstr[1]))
+        #if type(formstr[1]).__name__ == "NoneType":
         #    raise ValueError("Cannot encode, must be an iterable")
 
         if pgdebug:
@@ -529,7 +505,6 @@ class packbin():
 
         return rrr
 
-    #@support.timeit
     def decode_data(self, dstr):
 
         #print ("---org:\n", dstr, "org---")

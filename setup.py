@@ -2,6 +2,9 @@ import setuptools
 
 descx = '''
 
+  Pack python array into a string, and matching unpack
+  routines as well. Python 3.
+
 '''
 
 classx = [
@@ -21,14 +24,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pypacker",
-    version="1.0",
+    name="pyvpacker",
+    version="1.1",
     author="Peter Glen",
     author_email="peterglen99@gmail.com",
     description="Pack python data onto a string.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pglen/pydpacker",
+    url="https://github.com/pglen/pyvpacker",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -37,15 +40,15 @@ setuptools.setup(
     include_package_data=True,
     packages=setuptools.find_packages(include=includex),
 
-    #scripts = ['pypacker.py'],
-    py_modules = ["pypacker", "tests" ],
-    #package_dir = {'': 'tests', 'tests':'test_packer'},
+    scripts = ['demopacker.py'],
+    py_modules = ['pyvpacker'],
+    #package_dir = {'': '.', }, #'tests':'test_packer'},
 
     python_requires='>=3',
 
-    #entry_points={
-    #    'console_scripts': [ "pydbase=pydbase:mainfunc", ],
-    #}
+    entry_points={
+        'console_scripts': [ "demopacker=demopacker:mainfunc", ],
+    }
 )
 
 # EOF

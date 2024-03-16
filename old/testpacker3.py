@@ -5,34 +5,32 @@ from __future__ import print_function
 import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
-sys.path.append( "..")
-import pyvpacker
+from Crypto import Random
+from Crypto.Hash import SHA512
+
+import pypacker
+
 
 # ------------------------------------------------------------------------
 # Test harness
 
 if __name__ == '__main__':
 
-    xorg = ["val1", "val2"]
-    yorg = ("str1", "2", "3")
-    zorg = { "key1" : "111", 'key2' : 222, "arr": xorg }
+    xorg = ["val1", "val2", "val3", "val4", "val5", "val6", "val7", "val8", "val9",  "val10",
+                    "val11", "val12", "val13", "val14", "val15", "val16", "val17"]
 
-    pb = pyvpacker.packbin();
-    pb.verbose = 0
+    pb = pypacker.packbin();
+    pb.verbose = 5
+    #print("pb exports", dir(pb))
 
-    #print("doc", pyvpacker.__doc__)
-    #print("dict", dir(pyvpacker))
-
-    #sorg_var = [xorg , xorg]
-    #sorg_var = [ zorg, yorg ]
-    sorg_var = [ 334, "subx", 'x', xorg, yorg]
-    #sorg_var  = [ 334, "subx", 'x', xorg, zorg]
-    #sorg_var = "hello string"
+    #sorg_var = [ 334, "subx", 'x', xorg]
+    sorg_var = xorg
 
     if pb.verbose > 2:
         print ("sorg_var: ",  sorg_var)
 
     eee_var = pb.encode_data("", *sorg_var)
+
     if pb.verbose > 2:
         print ("eee_var type", type(eee_var).__name__, ":\n", eee_var)
 
@@ -43,7 +41,6 @@ if __name__ == '__main__':
 
     if  sorg_var != fff_var:
         print("Error on compare")
-        sys.exit(1)
     else:
         print("Compare OK")
 

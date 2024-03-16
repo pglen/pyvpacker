@@ -7,6 +7,8 @@
 #  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+.PHONY: tests
+
 all:
 	@echo "Type 'make help' for a list of targets"
 
@@ -32,6 +34,12 @@ git:
 	git add .
 	git commit -m autocheck
 	git push
+
+tests:
+	./tests.sh
+
+testall:
+	./testall.sh
 
 # End of Makefile
 

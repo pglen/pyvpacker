@@ -6,7 +6,7 @@ import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
 sys.path.append( "..")
-import  pypacker
+import  pyvpacker
 
 # ------------------------------------------------------------------------
 # Test harness
@@ -16,7 +16,7 @@ if __name__ == '__main__':
     rrr =  "mTQdnL51eKnblQflLGSMvnMKDG4XjhKa9Mbgm5ZY9YLd" \
             "/SxqZZxwyKc/ZVzCVwMxiJ5X8LdX3X5VVO5zq/VBWQ=="
 
-    pb = pypacker.packbin();
+    pb = pyvpacker.packbin();
     pb.verbose = 0
 
     #bindat = Random.new().read(64)

@@ -6,7 +6,7 @@ import os, sys, getopt, signal, select, string, time
 import struct, stat, base64, random, zlib
 
 sys.path.append( "..")
-import  pypacker
+import  pyvpacker
 
 # {pg s7 'iscsifd' i4 33 s3 'sub' c1 d s37
 # 'longer str here with ' and " all crap' i4 33 f8 33333333.200000
@@ -17,7 +17,7 @@ import  pypacker
 
 if __name__ == '__main__':
 
-    pb = pypacker.packbin();
+    pb = pyvpacker.packbin();
     pb.verbose = 0
     pb.pgdebug = 0
 
